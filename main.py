@@ -59,15 +59,15 @@ class Enemy(MoveableObject):
 # MAIN GAME LOOP
 def game_loop():
     done = False
-		
     while not done:
         pygame.display.flip()
         clock.tick(60)
         pygame.display.update()
-        event = pygame.event.wait()
-        if event.type== pygame.KEYDOWN:
-            if event.key == K_Q:#doesnt work
-                done = True
+        keyState = pygame.key.get_pressed()
+        if keyState[pygame.K_ESCAPE] or keyState[pygame.K_q]:
+            done = True
+        pygame.event.pump()
+            
     pygame.quit()
         # notice that there is currently no way to exit this loop... how can we do that?
         # ^ done
