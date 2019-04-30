@@ -106,7 +106,7 @@ def game_loop():
         
     
         # notice that there is currently no way to exit this loop... how can we do that?
-        # ^ done
+        
 if __name__ == "__main__":
     game_loop()
     pygame.quit()
