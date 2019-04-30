@@ -28,6 +28,18 @@ pygame.display.set_caption("Platform Game")
 # setting up clock for refresh rate
 clock = pygame.time.Clock()
 
+#Directional Jump per move
+dx = 50
+dy = 50
+
+#Colors
+WHITE = (255, 255, 255)
+BLACK=(0,0,0)
+
+#Test Toon
+toon = pygame.image.load("toon.png")
+toon = pygame.transform.scale(toon, (50,50))
+
 # ***************
 # ** GAME CODE **
 # ***************
@@ -36,11 +48,23 @@ clock = pygame.time.Clock()
 # if you know inheritance then it would come in very useful but if not, dont worry there are work arounds
 
 class MoveableObject:
-    def __init__(self):
-        self.data = []
-
-    def move(self):
-        raise NotImplementedError
+    def __init__(self, image, width, height, inX, inY):
+        self.image = image
+        self.width = width
+        self.height = height
+        self.pos = image.get_rect().move(inX,inY)
+        
+    def move(self, direction):
+        if direction == "left":
+            self.pos = self.pos.move(-dx, 0)
+            if self.pos.left<dx:
+                self.pos.right = dx-self.pos.left
+        if direction == "right":
+            self.pos = self.pos.move(dx, 0)
+            if self.pos.right<dx:
+                self.pos.left = dx-self.pos.right
+        
+    
 
 class Character(MoveableObject):
     def __init__(self):
@@ -56,19 +80,32 @@ class Enemy(MoveableObject):
     def move(self):
         pass
 
+
+obj = MoveableObject(toon,50,50,300,300)
+        
 # MAIN GAME LOOP
 def game_loop():
     done = False
     while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
+                    done = True
+                if event.key == pygame.K_LEFT:
+                    obj.move("left")
+                if event.key == pygame.K_RIGHT:
+                    obj.move("right")
+
         pygame.display.flip()
-        clock.tick(60)
+        screen.blit(obj.image, obj.pos)
+        clock.tick(30)
         pygame.display.update()
-        keyState = pygame.key.get_pressed()
-        if keyState[pygame.K_ESCAPE] or keyState[pygame.K_q]:
-            done = True
-        pygame.event.pump()
-            
+        
+        
     pygame.quit()
+    quit()
         # notice that there is currently no way to exit this loop... how can we do that?
         # ^ done
 if __name__ == "__main__":
